@@ -1,0 +1,202 @@
+﻿@{
+    ViewData["Title"] = $"{@Model.Username} - questionmi";
+    Layout = "~/Views/Shared/_LayoutLoggedOut.cshtml";
+}
+
+<style>
+h1 {
+    text-align: center;
+    padding: 50px 10px 0 10px;
+}
+
+main {
+    width: 700px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.container {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    max-width: none;
+    background: linear-gradient(to top right,#fc2c77 0%,#6c4079 100%);
+}
+
+.toast {
+    display: none;
+    position: fixed;
+    align-self: flex-start;
+    margin: 10px 0 0 0;
+    padding: 15px 15px 15px 15px;
+    border-radius: 20px;
+    background-color: #4BB543;
+    color: #fff;
+    font-weight: bold;
+    -webkit-box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    height: 500px;
+    border-radius: 15px;
+    -webkit-box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    font-family: 'Pacifico', cursive;
+    font-size: 22px;
+    position: absolute;
+    align-self: flex-start;
+    margin-left: 20px;
+    padding-right: 5px;
+    background-image: linear-gradient(to top right,#fc2c77 0%,#6c4079 100%);
+    background-size: 100%;
+    background-repeat: repeat;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; 
+    -moz-background-clip: text;
+    -moz-text-fill-color: transparent;
+}
+
+.button {
+    background: #4272d7;
+    display: inline-block;
+    line-height: 50px;
+    margin-top: 15px;
+    padding: 0 50px;
+    transition: all .4s ease;
+    cursor: pointer;
+    font-size: 18px;
+    color: #fff;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+    box-sizing: inherit;
+    opacity: 100%;
+    transition: opacity 1s;
+}
+
+.button:hover {
+    opacity: 80%;
+}
+
+.fa {
+    display: none !important;
+    margin-left: -12px;
+    margin-right: 8px;
+  }
+
+.ta {
+    width: 600px;
+    outline: none;
+    margin: 0;
+    border: none;
+    background-color: #F2F2F2;
+    box-shadow: inset 0 1px 3px 0 rgba(0,0,0,.08);
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    margin-top: 30px;
+    color: #666;
+    resize: none;
+}
+
+@@media screen and (max-width: 600px) {
+    
+    main {
+        height: 100% !important;
+    }
+
+    .card-body {
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+        justify-content: center;
+    }
+
+    .logo {
+       top: 0; 
+    }
+
+    .form-outline {
+        justify-self: center;
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .ta {
+        width: 100%;
+    }
+
+    .button {
+        background-image: linear-gradient(to top right,#fc2c77 0%,#6c4079 100%);
+        background-size: 100%;
+        background-repeat: repeat;
+    }
+}
+</style>
+
+<div id="toast" class="toast"><p>Success</p></div>
+<div class="card-body">
+    <p class="logo">Questionmi</p>
+    <h1>@Model.Username</h1>
+    <div class="form-outline d-flex flex-column">
+        <textarea class="ta" rows="8" cols="5" maxlength="250" placeholder="Type your tell..."></textarea> </br>
+        <button class="button mt-3"><i class="fa fa-spinner fa-spin"></i>Submit</button>
+      </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+let loadingCircle = document.getElementsByClassName("fa")[0];
+
+$('.button').click(function() {
+    $('.button').prop('disabled', true);
+
+    tell = $('.ta:first').val();
+    //loadingCircle.style.setProperty("display", "inline-block", "important");
+    
+    $.ajax({
+            url: `${window.location.origin}/${"@Model.Username"}`,
+            type:"POST",
+            beforeSend: function(xhr){
+                        xhr.setRequestHeader("Access-Control-Allow-Origin","*");
+                        xhr.setRequestHeader("Content-Type","application/json");
+                        xhr.setRequestHeader("Accept","text/plain");
+            },
+            data: JSON.stringify({
+                text: tell
+            }), 
+            dataType:"json",
+            success: function(data){
+                //loadingCircle.style.setProperty("display", "none", "important");
+                //toast.style.background = "#4BB543";
+                //toast.innerText = "Tell successfully posted!";
+                //$("#toast").fadeIn().delay(5000).fadeOut();
+                $('.button').prop('disabled', false);
+                $('.ta:first').val("");
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                //loadingCircle.style.setProperty("display", "none", "important");
+                //toast.style.background = "red";
+                //toast.innerText = XMLHttpRequest.responseText;
+                //$("#toast").fadeIn().delay(5000).fadeOut();
+                $('.button').prop('disabled', false);
+            }  
+        });
+});
+</script>

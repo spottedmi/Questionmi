@@ -1,0 +1,94 @@
+﻿@{
+    ViewData["Title"] = "Queue";
+}
+<style>
+    .tell-card {
+        margin-top: 50px;
+        width: 600px;
+        height: 280px;
+        border-radius: 20px;
+    }
+
+    .tell-text {
+        width: 90%;
+        height: 150px;
+        background-color: #FFF !important;
+        border-radius: 10px;
+    }
+
+    .button-box {
+        margin-top: 15px;
+        width: 90% !important;
+    }
+
+    p {
+        opacity: 70%;
+        align-self: center;
+        justify-self: center;
+    }
+
+    @@media screen and (max-width: 991px) {
+        .container {
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .tell-card {
+            width: 100%;
+            border-radius: 0;
+            border: 1px solid rgba(0,0,0,.10);
+            border-left: 1px;
+            border-right: 1px;
+            border-bottom: 1px;
+            margin: 0;
+            box-shadow: none !important;
+        }
+    }
+</style>
+
+<div class="tells-list d-flex flex-column align-items-center">
+    @if(Model.Count == 0)
+    {
+        <p>No tells to accept.</p>
+    }
+
+    @foreach(var tell in Model)
+    {
+        <div class="tell-card d-flex flex-column align-items-center justify-content-center shadow" tell-id="@tell.Id">
+            <textarea class="tell-text form-control" disabled>@tell.Text</textarea>
+            <p class="ali">@tell.CreatedAt.ToString("hh:mm dd/MM/yyyy")</p>
+            <div class="button-box d-flex flex-row justify-content-around">
+                <input type="button" class="btn btn-success" value="Accept" onclick="changeTellStatus(this, true)" />
+                <input type="button" class="btn btn-danger" value="Reject" onclick="changeTellStatus(this, false)" />
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    function changeTellStatus(button, isAccepted) {
+        let tellCard = $(button).parent().parent();
+
+        $.ajax({
+            url: `${window.location.origin}/Tell/ChangeTellStatus`,
+            type: 'POST',
+                beforeSend: function(xhr){
+                xhr.setRequestHeader("Access-Control-Allow-Origin","*");
+                xhr.setRequestHeader("Content-Type","application/json");
+                xhr.setRequestHeader("Accept","text/plain");
+            },
+            data: JSON.stringify({
+                tellId: tellCard.attr("tell-id"),
+                isAccepted: isAccepted
+            }),
+            dataType: 'json',
+            success: function() {
+                tellCard.remove();
+            },
+            error: function(jqXHR, textStatus) {
+                alert(jqXHR.responseText);
+            }
+        });
+    }
+</script>

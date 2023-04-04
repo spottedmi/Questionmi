@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_LayoutLoggedOut.cshtml";
+}
+<div class="card p-3 shadow-sm">
+    <h1 class="text-center">Zaloguj się</h1>
+    <div id="form-panel">
+        @using (Html.BeginForm("Login", "Home", FormMethod.Post))
+        {
+            <div class="input-container">
+                <div class="input-label"><b>Nazwa użytkownika</b></div>
+                <input class="form-control" type="text" name="Username" /> <br />
+            </div>
+            <div class="input-container">
+                <div class="input-label"><b>Hasło</b></div>
+                <input class="form-control" type="password" name="Password" /> <br />
+            </div>
+            <p class="error-message">@ViewBag.Error</p>
+            <input type="submit" value="Login" class="btn btn-primary w-100" />
+        }
+    </div>
+</div>

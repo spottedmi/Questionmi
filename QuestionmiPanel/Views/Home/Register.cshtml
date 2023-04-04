@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Sign up";
+    Layout = "~/Views/Shared/_LayoutLoggedOut.cshtml";
+}
+
+<h1>Sign up</h1>
+<div id="form-panel">
+    @using (Html.BeginForm("Register", "Home", FormMethod.Post))
+    {
+        <div class="input-container">
+            <div class="input-label"><b>Username</b></div>
+            <input class="form-control" type="text" name="Username"/> <br />
+        </div>
+
+        <div class="input-container">
+            <div class="input-label"><b>Password</b></div>
+            <input class="form-control" type="password" name="Password"/> <br />
+        </div>
+
+        <div class="input-container">
+            <div class="input-label"><b>Repeat password</b></div>
+            <input class="form-control" type="password" name="PasswordRepeat"/> <br />
+        </div>
+
+        <div class="input-container">
+            <div class="input-label"><b>Access code</b></div>
+            <input class="form-control" type="text" name="AccessCode"/> <br />
+        </div>
+
+        <p class="error-message">@ViewBag.Error</p>
+
+        <input type="submit" value="Register" class="btn btn-primary w-100" />
+    }
+</div>
