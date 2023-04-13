@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +10,11 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITellRepository, TellRepository>();
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
+ILogger logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<Program>>();
+logger.LogInformation("This is a testlog");
 
 
 builder.Services.AddCors(options =>
@@ -26,7 +30,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromHours(2);
+    options.IdleTimeout = TimeSpan.FromHours(24);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
     options.Cookie.Name = "Questionmi.Session";
@@ -46,6 +50,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.Events.OnRedirectToAccessDenied = context =>
         {
             context.Response.Redirect("/Home/Login");
+        
+            logger.LogWarning("access denided");
+
             return Task.CompletedTask;
         };
         options.Cookie.SameSite = SameSiteMode.None;
@@ -60,7 +67,7 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 {
     options.MinimumSameSitePolicy = SameSiteMode.None;
     options.HttpOnly = HttpOnlyPolicy.None;
-    options.Secure = CookieSecurePolicy.Always;
+    options.Secure = CookieSecurePolicy.None; // domyślnie Always
     options.CheckConsentNeeded = context => false;
 });
 
