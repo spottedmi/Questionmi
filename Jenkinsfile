@@ -71,7 +71,7 @@ pipeline{
 					withCredentials([usernamePassword(credentialsId: "github_token", passwordVariable: 'githubSecret', usernameVariable: 'githubUser')]) {
 							
 							sh "curl https://raw.githubusercontent.com/RandomGuy090/github-auto-release/main/auto-release.sh > run.sh";
-							sh "bash run.sh -u spottedmi -r TelloBeep -t $githubSecret -b $TAG_NAME > VERSION"
+							sh "bash run.sh -u spottedmi -r Questionmi -t $githubSecret -b $TAG_NAME > VERSION"
 							VERSION = readFile('VERSION').trim()
 							echo VERSION;					
 							echo VERSION;					
